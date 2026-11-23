@@ -1,6 +1,5 @@
 package com.example.proyectov2.ui.pantallas
 
-import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,6 +25,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,19 +34,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.proyectov2.RackProViewModel
 import com.example.proyectov2.camara.FotoGuardada
 import com.example.proyectov2.camara.rememberLanzadorCamara
 import com.example.proyectov2.camara.rememberLanzadorGaleria
-import com.example.proyectov2.data.CatalogoComponentes
-import com.example.proyectov2.data.Componente
 import com.example.proyectov2.data.Estados
-import com.example.proyectov2.data.Levantamiento
 import com.example.proyectov2.data.Roles
+import com.example.proyectov2.data.local.Componente
+import com.example.proyectov2.data.local.Levantamiento
+import com.example.proyectov2.data.local.Usuario
 import com.example.proyectov2.ui.componentes.BotonPrincipal
 import com.example.proyectov2.ui.componentes.BotonSecundario
 import com.example.proyectov2.ui.componentes.CampoFormulario
@@ -58,18 +56,30 @@ import com.example.proyectov2.ui.theme.AzulPetroleo
 import com.example.proyectov2.ui.theme.Blanco
 import com.example.proyectov2.ui.theme.FondoGris
 import com.example.proyectov2.ui.theme.GrisFoto
+import com.example.proyectov2.ui.theme.RojoTexto
 import com.example.proyectov2.ui.theme.TextoPrincipal
 import com.example.proyectov2.ui.theme.TextoSecundario
 import com.example.proyectov2.ui.theme.VerdeAzulado
+import com.example.proyectov2.ui.viewmodel.LevantamientosViewModel
+import com.example.proyectov2.ui.viewmodel.SesionViewModel
 import com.example.proyectov2.utilidades.Fechas
 import com.example.proyectov2.utilidades.Validaciones
 
 @Composable
-fun DetalleRackScreen(viewModel: RackProViewModel, levantamientoId: Int, onVolver: () -> Unit) {
+fun DetalleRackScreen(
+    sesionViewModel: SesionViewModel,
+    viewModel: LevantamientosViewModel,
+    levantamientoId: Int,
+    onVolver: () -> Unit
+) {
+    val usuario = sesionViewModel.usuarioActual ?: return
     val levantamientoFlow = remember(levantamientoId) { viewModel.observarLevantamiento(levantamientoId) }
     val componentesFlow = remember(levantamientoId) { viewModel.observarComponentes(levantamientoId) }
     val levantamiento by levantamientoFlow.collectAsState(initial = null)
     val componentes by componentesFlow.collectAsState(initial = emptyList())
+
+    // Al abrir el detalle se piden a la API los datos más recientes de este levantamiento.
+    LaunchedEffect(levantamientoId) { viewModel.actualizarDetalle(levantamientoId) }
 
     val levantamientoCargado = levantamiento
     if (levantamientoCargado == null) {
@@ -85,6 +95,7 @@ fun DetalleRackScreen(viewModel: RackProViewModel, levantamientoId: Int, onVolve
 
     ContenidoDetalle(
         viewModel = viewModel,
+        usuario = usuario,
         levantamiento = levantamientoCargado,
         componentes = componentes,
         onVolver = onVolver
@@ -93,13 +104,13 @@ fun DetalleRackScreen(viewModel: RackProViewModel, levantamientoId: Int, onVolve
 
 @Composable
 private fun ContenidoDetalle(
-    viewModel: RackProViewModel,
+    viewModel: LevantamientosViewModel,
+    usuario: Usuario,
     levantamiento: Levantamiento,
     componentes: List<Componente>,
     onVolver: () -> Unit
 ) {
-    val context = LocalContext.current
-    val esSupervisor = viewModel.usuarioActual?.rol == Roles.SUPERVISOR
+    val esSupervisor = usuario.rol == Roles.SUPERVISOR
     val estaAprobado = levantamiento.estado == Estados.APROBADO
     val sePuedeEditar = !estaAprobado
 
@@ -110,6 +121,7 @@ private fun ContenidoDetalle(
 
     var mostrarDialogoComponente by remember { mutableStateOf(false) }
     var mostrarDialogoAprobar by remember { mutableStateOf(false) }
+    var mostrarDialogoEliminar by remember { mutableStateOf(false) }
 
     val tomarFoto = rememberLanzadorCamara { uriDeLaFoto ->
         viewModel.guardarFotoLevantamiento(levantamiento.id, uriDeLaFoto)
@@ -209,7 +221,10 @@ private fun ContenidoDetalle(
                             color = VerdeAzulado,
                             fontWeight = FontWeight.Bold,
                             fontSize = 13.sp,
-                            modifier = Modifier.clickable { mostrarDialogoComponente = true }
+                            modifier = Modifier.clickable {
+                                viewModel.cargarCatalogo()
+                                mostrarDialogoComponente = true
+                            }
                         )
                     }
                 }
@@ -274,18 +289,19 @@ private fun ContenidoDetalle(
                     errorFecha = Validaciones.validarFecha(fecha)
                     if (errorCodigo == null && errorFecha == null) {
                         viewModel.guardarCambiosLevantamiento(levantamiento, codigoRack, fecha)
-                        Toast.makeText(context, "Cambios guardados", Toast.LENGTH_SHORT).show()
                     }
                 }
             )
             Spacer(modifier = Modifier.height(10.dp))
-            if (estaAprobado) {
-                TextoInformativo(texto = "Este levantamiento ya fue aprobado", color = VerdeAzulado)
-            } else {
-                BotonSecundario(
-                    texto = "Aprobar (Supervisor)",
-                    habilitado = esSupervisor,
+            when {
+                estaAprobado -> TextoInformativo(texto = "Este levantamiento ya fue aprobado", color = VerdeAzulado)
+                esSupervisor -> BotonSecundario(
+                    texto = "Aprobar levantamiento",
                     onClick = { mostrarDialogoAprobar = true }
+                )
+                else -> BotonSecundario(
+                    texto = "Eliminar levantamiento",
+                    onClick = { mostrarDialogoEliminar = true }
                 )
             }
         }
@@ -293,6 +309,7 @@ private fun ContenidoDetalle(
 
     if (mostrarDialogoComponente) {
         DialogoAgregarComponente(
+            catalogo = viewModel.catalogoComponentes,
             onCancelar = { mostrarDialogoComponente = false },
             onElegir = { nombreComponente ->
                 viewModel.agregarComponente(levantamiento.id, nombreComponente)
@@ -318,7 +335,7 @@ private fun ContenidoDetalle(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    viewModel.aprobarLevantamiento(levantamiento)
+                    viewModel.aprobarLevantamiento(levantamiento, usuario)
                     mostrarDialogoAprobar = false
                 }) {
                     Text("Aprobar", color = VerdeAzulado, fontWeight = FontWeight.Bold)
@@ -326,6 +343,28 @@ private fun ContenidoDetalle(
             },
             dismissButton = {
                 TextButton(onClick = { mostrarDialogoAprobar = false }) {
+                    Text("Cancelar", color = TextoSecundario)
+                }
+            }
+        )
+    }
+
+    if (mostrarDialogoEliminar) {
+        AlertDialog(
+            onDismissRequest = { mostrarDialogoEliminar = false },
+            containerColor = Blanco,
+            title = { Text("Eliminar levantamiento", fontWeight = FontWeight.Bold) },
+            text = { Text("¿Seguro que quieres eliminar el Rack ${levantamiento.codigoRack}? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    mostrarDialogoEliminar = false
+                    viewModel.eliminarLevantamiento(levantamiento, alEliminar = onVolver)
+                }) {
+                    Text("Eliminar", color = RojoTexto, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { mostrarDialogoEliminar = false }) {
                     Text("Cancelar", color = TextoSecundario)
                 }
             }
@@ -346,14 +385,17 @@ private fun BotonFoto(texto: String, habilitado: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun DialogoAgregarComponente(onCancelar: () -> Unit, onElegir: (String) -> Unit) {
+private fun DialogoAgregarComponente(catalogo: List<String>, onCancelar: () -> Unit, onElegir: (String) -> Unit) {
     AlertDialog(
         onDismissRequest = onCancelar,
         containerColor = Blanco,
         title = { Text("Agregar componente", fontWeight = FontWeight.Bold) },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                CatalogoComponentes.lista.forEach { nombreComponente ->
+                if (catalogo.isEmpty()) {
+                    Text("Cargando catálogo desde el servidor...", color = TextoSecundario, fontSize = 13.sp)
+                }
+                catalogo.forEach { nombreComponente ->
                     Text(
                         text = nombreComponente,
                         fontSize = 15.sp,

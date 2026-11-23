@@ -1,5 +1,6 @@
 package com.example.proyectov2.navegacion
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,10 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,7 +27,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.proyectov2.R
-import com.example.proyectov2.RackProViewModel
 import com.example.proyectov2.ui.componentes.BarraInferior
 import com.example.proyectov2.ui.pantallas.AcercaDeScreen
 import com.example.proyectov2.ui.pantallas.DetalleRackScreen
@@ -34,10 +36,17 @@ import com.example.proyectov2.ui.pantallas.LoginScreen
 import com.example.proyectov2.ui.pantallas.PerfilScreen
 import com.example.proyectov2.ui.pantallas.RegistroScreen
 import com.example.proyectov2.ui.theme.AzulPetroleo
+import com.example.proyectov2.ui.viewmodel.LevantamientosViewModel
+import com.example.proyectov2.ui.viewmodel.SesionViewModel
 
 @Composable
-fun NavegacionApp(viewModel: RackProViewModel = viewModel()) {
-    if (viewModel.cargandoSesion) {
+fun NavegacionApp(
+    sesionViewModel: SesionViewModel = viewModel(),
+    levantamientosViewModel: LevantamientosViewModel = viewModel()
+) {
+    MostrarMensajes(levantamientosViewModel)
+
+    if (sesionViewModel.cargandoSesion) {
         PantallaDeCarga()
         return
     }
@@ -47,7 +56,7 @@ fun NavegacionApp(viewModel: RackProViewModel = viewModel()) {
     val rutaActual = entradaActual?.destination?.route
     val rutasConBarraInferior = listOf(Rutas.LEVANTAMIENTOS, Rutas.PERFIL, Rutas.ACERCA_DE)
     val rutaInicial = remember {
-        if (viewModel.usuarioActual != null) Rutas.LEVANTAMIENTOS else Rutas.LOGIN
+        if (sesionViewModel.usuarioActual != null) Rutas.LEVANTAMIENTOS else Rutas.LOGIN
     }
 
     Scaffold(
@@ -68,21 +77,22 @@ fun NavegacionApp(viewModel: RackProViewModel = viewModel()) {
         ) {
             composable(Rutas.LOGIN) {
                 LoginScreen(
-                    viewModel = viewModel,
+                    viewModel = sesionViewModel,
                     onIngresoExitoso = { irAInicioLimpiandoHistorial(navController) },
                     onIrARegistro = { navController.navigate(Rutas.REGISTRO) }
                 )
             }
             composable(Rutas.REGISTRO) {
                 RegistroScreen(
-                    viewModel = viewModel,
+                    viewModel = sesionViewModel,
                     onRegistroExitoso = { irAInicioLimpiandoHistorial(navController) },
                     onIrALogin = { navController.popBackStack() }
                 )
             }
             composable(Rutas.LEVANTAMIENTOS) {
                 LevantamientosScreen(
-                    viewModel = viewModel,
+                    sesionViewModel = sesionViewModel,
+                    viewModel = levantamientosViewModel,
                     onAbrirDetalle = { levantamientoId ->
                         navController.navigate(Rutas.detalle(levantamientoId))
                     }
@@ -94,14 +104,16 @@ fun NavegacionApp(viewModel: RackProViewModel = viewModel()) {
             ) { entrada ->
                 val levantamientoId = entrada.arguments?.getInt("levantamientoId") ?: 0
                 DetalleRackScreen(
-                    viewModel = viewModel,
+                    sesionViewModel = sesionViewModel,
+                    viewModel = levantamientosViewModel,
                     levantamientoId = levantamientoId,
                     onVolver = { navController.popBackStack() }
                 )
             }
             composable(Rutas.PERFIL) {
                 PerfilScreen(
-                    viewModel = viewModel,
+                    sesionViewModel = sesionViewModel,
+                    levantamientosViewModel = levantamientosViewModel,
                     onEditarPerfil = { navController.navigate(Rutas.EDITAR_PERFIL) },
                     onSesionCerrada = {
                         navController.navigate(Rutas.LOGIN) {
@@ -112,7 +124,7 @@ fun NavegacionApp(viewModel: RackProViewModel = viewModel()) {
             }
             composable(Rutas.EDITAR_PERFIL) {
                 EditarPerfilScreen(
-                    viewModel = viewModel,
+                    viewModel = sesionViewModel,
                     onVolver = { navController.popBackStack() }
                 )
             }
@@ -134,6 +146,19 @@ private fun navegarAPestana(navController: NavHostController, ruta: String) {
 private fun irAInicioLimpiandoHistorial(navController: NavHostController) {
     navController.navigate(Rutas.LEVANTAMIENTOS) {
         popUpTo(navController.graph.id) { inclusive = true }
+    }
+}
+
+/** Muestra como Toast los mensajes del ViewModel (errores de red, confirmaciones) una sola vez. */
+@Composable
+private fun MostrarMensajes(levantamientosViewModel: LevantamientosViewModel) {
+    val context = LocalContext.current
+    val mensaje = levantamientosViewModel.mensaje
+    LaunchedEffect(mensaje) {
+        if (mensaje != null) {
+            Toast.makeText(context, mensaje, Toast.LENGTH_LONG).show()
+            levantamientosViewModel.mensajeMostrado()
+        }
     }
 }
 

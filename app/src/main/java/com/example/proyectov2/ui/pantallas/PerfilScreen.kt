@@ -30,7 +30,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.proyectov2.RackProViewModel
 import com.example.proyectov2.data.Estados
 import com.example.proyectov2.data.Roles
 import com.example.proyectov2.ui.componentes.AvatarUsuario
@@ -46,15 +45,18 @@ import com.example.proyectov2.ui.theme.TextoSecundario
 import com.example.proyectov2.ui.theme.VerdeAzulado
 import com.example.proyectov2.ui.theme.VerdeFondo
 import com.example.proyectov2.ui.theme.VerdeTexto
+import com.example.proyectov2.ui.viewmodel.LevantamientosViewModel
+import com.example.proyectov2.ui.viewmodel.SesionViewModel
 
 @Composable
 fun PerfilScreen(
-    viewModel: RackProViewModel,
+    sesionViewModel: SesionViewModel,
+    levantamientosViewModel: LevantamientosViewModel,
     onEditarPerfil: () -> Unit,
     onSesionCerrada: () -> Unit
 ) {
-    val usuario = viewModel.usuarioActual ?: return
-    val todosLosLevantamientos by viewModel.levantamientos.collectAsState()
+    val usuario = sesionViewModel.usuarioActual ?: return
+    val todosLosLevantamientos by levantamientosViewModel.levantamientos.collectAsState()
     var mostrarDialogoCerrarSesion by remember { mutableStateOf(false) }
 
     val misLevantamientos = if (usuario.rol == Roles.SUPERVISOR) {
@@ -131,7 +133,7 @@ fun PerfilScreen(
             confirmButton = {
                 TextButton(onClick = {
                     mostrarDialogoCerrarSesion = false
-                    viewModel.cerrarSesion(onSesionCerrada)
+                    sesionViewModel.cerrarSesion(onSesionCerrada)
                 }) {
                     Text("Salir", color = RojoTexto, fontWeight = FontWeight.Bold)
                 }

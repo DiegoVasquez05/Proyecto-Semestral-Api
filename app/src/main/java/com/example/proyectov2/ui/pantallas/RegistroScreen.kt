@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.proyectov2.RackProViewModel
 import com.example.proyectov2.data.Roles
 import com.example.proyectov2.ui.componentes.BotonPrincipal
 import com.example.proyectov2.ui.componentes.BotonSecundario
@@ -33,11 +32,12 @@ import com.example.proyectov2.ui.componentes.TextoInformativo
 import com.example.proyectov2.ui.theme.FondoGris
 import com.example.proyectov2.ui.theme.RojoTexto
 import com.example.proyectov2.ui.theme.TextoSecundario
+import com.example.proyectov2.ui.viewmodel.SesionViewModel
 import com.example.proyectov2.utilidades.Validaciones
 
 @Composable
 fun RegistroScreen(
-    viewModel: RackProViewModel,
+    viewModel: SesionViewModel,
     onRegistroExitoso: () -> Unit,
     onIrALogin: () -> Unit
 ) {
@@ -113,7 +113,8 @@ fun RegistroScreen(
                 .padding(20.dp)
         ) {
             BotonPrincipal(
-                texto = "Crear cuenta",
+                texto = if (viewModel.procesando) "Creando cuenta..." else "Crear cuenta",
+                habilitado = !viewModel.procesando,
                 onClick = {
                     errorNombre = Validaciones.validarNombre(nombreCompleto)
                     errorCorreo = Validaciones.validarCorreo(correo)

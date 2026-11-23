@@ -35,7 +35,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyectov2.R
-import com.example.proyectov2.RackProViewModel
 import com.example.proyectov2.data.Roles
 import com.example.proyectov2.ui.componentes.BotonPrincipal
 import com.example.proyectov2.ui.componentes.BotonSecundario
@@ -47,11 +46,12 @@ import com.example.proyectov2.ui.theme.Blanco
 import com.example.proyectov2.ui.theme.FondoGris
 import com.example.proyectov2.ui.theme.RojoTexto
 import com.example.proyectov2.ui.theme.TextoSecundario
+import com.example.proyectov2.ui.viewmodel.SesionViewModel
 import com.example.proyectov2.utilidades.Validaciones
 
 @Composable
 fun LoginScreen(
-    viewModel: RackProViewModel,
+    viewModel: SesionViewModel,
     onIngresoExitoso: () -> Unit,
     onIrARegistro: () -> Unit
 ) {
@@ -111,7 +111,7 @@ fun LoginScreen(
                 .padding(20.dp)
         ) {
             CampoFormulario(
-                etiqueta = "Usuario",
+                etiqueta = "Correo",
                 valor = correo,
                 onValorCambia = { textoNuevo ->
                     correo = textoNuevo
@@ -154,7 +154,8 @@ fun LoginScreen(
                 .padding(20.dp)
         ) {
             BotonPrincipal(
-                texto = "Ingresar",
+                texto = if (viewModel.procesando) "Ingresando..." else "Ingresar",
+                habilitado = !viewModel.procesando,
                 onClick = {
                     errorCorreo = Validaciones.validarCorreo(correo)
                     errorContrasena = Validaciones.validarContrasenaIngresada(contrasena)
@@ -172,7 +173,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(10.dp))
             BotonSecundario(texto = "¿No tienes cuenta? Regístrate", onClick = onIrARegistro)
             Spacer(modifier = Modifier.height(12.dp))
-            TextoInformativo(texto = "Modo local · funciona sin conexión")
+            TextoInformativo(texto = "Cuentas de prueba: inspector@cmc360.cl y supervisor@cmc360.cl · clave rackpro123")
         }
     }
 }
