@@ -1,13 +1,17 @@
-package com.example.proyectov2.data
+package com.example.proyectov2.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+/**
+ * Base de datos local (caché). La versión 2 reemplaza el modo 100 % local de la versión
+ * anterior: ahora los datos vienen de la API, por eso se recrea la base en vez de migrarla.
+ */
 @Database(
     entities = [Usuario::class, Levantamiento::class, Componente::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class RackProDatabase : RoomDatabase() {
@@ -26,7 +30,7 @@ abstract class RackProDatabase : RoomDatabase() {
                     context.applicationContext,
                     RackProDatabase::class.java,
                     "rack_pro.db"
-                ).build()
+                ).fallbackToDestructiveMigration(dropAllTables = true).build()
                 instancia = nuevaInstancia
                 nuevaInstancia
             }
