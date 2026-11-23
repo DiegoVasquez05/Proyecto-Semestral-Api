@@ -1,0 +1,22 @@
+# Despliegue de la API en Render (https://render.com) usando "Blueprint".
+# Crea la base PostgreSQL y el servicio web, y los conecta automáticamente.
+databases:
+  - name: rack-pro-db
+    plan: free
+    databaseName: rack_pro
+    user: rack_pro
+
+services:
+  - type: web
+    name: rack-pro-api
+    runtime: node
+    plan: free
+    rootDir: api
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/salud
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rack-pro-db
+          property: connectionString
