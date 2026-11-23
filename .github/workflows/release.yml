@@ -1,10 +1,16 @@
 name: APK firmado (release)
 
-# Se ejecuta al subir una etiqueta de versión (por ejemplo v2.0.0) o manualmente desde la pestaña Actions.
+# Se ejecuta al subir una etiqueta de versión (por ejemplo v2.0.0) o manualmente desde la pestaña Actions
+# indicando la versión; en ese caso el workflow crea la etiqueta y la versión en GitHub Releases.
 on:
   push:
     tags: [ "v*" ]
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Versión a publicar (por ejemplo 2.0.0)"
+        required: true
+        default: "2.0.0"
 
 permissions:
   contents: write
@@ -12,6 +18,8 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      ETIQUETA: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', inputs.version) }}
 
     steps:
       - name: Checkout
@@ -53,7 +61,7 @@ jobs:
           APKSIGNER=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
           "$APKSIGNER" verify --print-certs app/build/outputs/apk/release/app-release.apk
           mkdir -p entrega
-          cp app/build/outputs/apk/release/app-release.apk "entrega/RackPro-${GITHUB_REF_NAME}.apk"
+          cp app/build/outputs/apk/release/app-release.apk "entrega/RackPro-${ETIQUETA}.apk"
 
       - name: Subir APK como artifact
         uses: actions/upload-artifact@v5
@@ -62,10 +70,12 @@ jobs:
           path: entrega/*.apk
 
       - name: Publicar la versión en GitHub Releases
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          name: Rack - Pro ${{ github.ref_name }}
+          tag_name: ${{ env.ETIQUETA }}
+          target_commitish: ${{ github.sha }}
+          make_latest: true
+          name: Rack - Pro ${{ env.ETIQUETA }}
           files: entrega/*.apk
           body: |
             APK release firmado de Rack - Pro, listo para instalar en Android 7.0 o superior.
