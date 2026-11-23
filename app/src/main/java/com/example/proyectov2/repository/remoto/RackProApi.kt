@@ -1,5 +1,17 @@
-package com.example.proyectov2.data.remoto
+package com.example.proyectov2.repository.remoto
 
+import com.example.proyectov2.model.AprobacionRequest
+import com.example.proyectov2.model.ComponenteCatalogoDto
+import com.example.proyectov2.model.ComponenteDto
+import com.example.proyectov2.model.EdicionLevantamientoRequest
+import com.example.proyectov2.model.EstadoComponenteRequest
+import com.example.proyectov2.model.LevantamientoDto
+import com.example.proyectov2.model.LoginRequest
+import com.example.proyectov2.model.NuevoComponenteRequest
+import com.example.proyectov2.model.NuevoLevantamientoRequest
+import com.example.proyectov2.model.PerfilRequest
+import com.example.proyectov2.model.RegistroRequest
+import com.example.proyectov2.model.UsuarioDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

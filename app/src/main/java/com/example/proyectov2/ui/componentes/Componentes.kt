@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyectov2.camara.FotoGuardada
-import com.example.proyectov2.data.Estados
+import com.example.proyectov2.model.Estados
 import com.example.proyectov2.navegacion.Rutas
 import com.example.proyectov2.ui.theme.AmarilloFondo
 import com.example.proyectov2.ui.theme.AmarilloTexto

@@ -1,9 +1,11 @@
-package com.example.proyectov2.data.local
+package com.example.proyectov2.repository.local
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.proyectov2.model.Componente
+import com.example.proyectov2.model.Levantamiento
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,13 +1,13 @@
-package com.example.proyectov2.data.repositorio
+package com.example.proyectov2.repository
 
-import com.example.proyectov2.data.local.Usuario
-import com.example.proyectov2.data.local.UsuarioDao
-import com.example.proyectov2.data.remoto.LoginRequest
-import com.example.proyectov2.data.remoto.PerfilRequest
-import com.example.proyectov2.data.remoto.RackProApi
-import com.example.proyectov2.data.remoto.RegistroRequest
-import com.example.proyectov2.data.remoto.aEntidad
-import com.example.proyectov2.data.remoto.llamarApi
+import com.example.proyectov2.model.LoginRequest
+import com.example.proyectov2.model.PerfilRequest
+import com.example.proyectov2.model.RegistroRequest
+import com.example.proyectov2.model.Usuario
+import com.example.proyectov2.repository.local.UsuarioDao
+import com.example.proyectov2.repository.remoto.RackProApi
+import com.example.proyectov2.repository.remoto.aEntidad
+import com.example.proyectov2.repository.remoto.llamarApi
 
 /**
  * Único punto de acceso a los datos del usuario: valida las credenciales con la API

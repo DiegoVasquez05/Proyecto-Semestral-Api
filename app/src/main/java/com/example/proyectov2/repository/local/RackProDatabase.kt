@@ -1,9 +1,12 @@
-package com.example.proyectov2.data.local
+package com.example.proyectov2.repository.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.proyectov2.model.Componente
+import com.example.proyectov2.model.Levantamiento
+import com.example.proyectov2.model.Usuario
 
 /**
  * Base de datos local (caché). La versión 2 reemplaza el modo 100 % local de la versión

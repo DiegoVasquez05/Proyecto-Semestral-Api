@@ -1,9 +1,9 @@
 package com.example.proyectov2
 
-import com.example.proyectov2.data.remoto.ComponenteDto
-import com.example.proyectov2.data.remoto.LevantamientoDto
-import com.example.proyectov2.data.remoto.UsuarioDto
-import com.example.proyectov2.data.remoto.aEntidad
+import com.example.proyectov2.model.ComponenteDto
+import com.example.proyectov2.model.LevantamientoDto
+import com.example.proyectov2.model.UsuarioDto
+import com.example.proyectov2.repository.remoto.aEntidad
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

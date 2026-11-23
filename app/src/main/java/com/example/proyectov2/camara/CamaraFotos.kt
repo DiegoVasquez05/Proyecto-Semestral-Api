@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import com.example.proyectov2.ui.componentes.AvatarUsuario
 import com.example.proyectov2.ui.theme.VerdeAzulado
+import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 
 @Composable
 fun CamaraFotos(nombreUsuario: String, fotoUri: String?, onFotoTomada: (Uri) -> Unit) {

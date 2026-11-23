@@ -1,7 +1,7 @@
 package com.example.proyectov2
 
-import com.example.proyectov2.data.remoto.MENSAJE_ERROR_DESCONOCIDO
-import com.example.proyectov2.data.remoto.mensajeDeErrorHttp
+import com.example.proyectov2.repository.remoto.MENSAJE_ERROR_DESCONOCIDO
+import com.example.proyectov2.repository.remoto.mensajeDeErrorHttp
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

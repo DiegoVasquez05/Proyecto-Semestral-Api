@@ -1,6 +1,6 @@
 package com.example.proyectov2
 
-import com.example.proyectov2.data.Estados
+import com.example.proyectov2.model.Estados
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

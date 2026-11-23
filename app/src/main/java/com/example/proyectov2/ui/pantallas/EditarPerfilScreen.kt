@@ -31,8 +31,8 @@ import com.example.proyectov2.ui.componentes.Encabezado
 import com.example.proyectov2.ui.componentes.TextoInformativo
 import com.example.proyectov2.ui.theme.FondoGris
 import com.example.proyectov2.ui.theme.RojoTexto
-import com.example.proyectov2.ui.viewmodel.SesionViewModel
 import com.example.proyectov2.utilidades.Validaciones
+import com.example.proyectov2.viewmodel.SesionViewModel
 
 @Composable
 fun EditarPerfilScreen(viewModel: SesionViewModel, onVolver: () -> Unit) {

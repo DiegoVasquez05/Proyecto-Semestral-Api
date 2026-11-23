@@ -36,8 +36,8 @@ import com.example.proyectov2.ui.pantallas.LoginScreen
 import com.example.proyectov2.ui.pantallas.PerfilScreen
 import com.example.proyectov2.ui.pantallas.RegistroScreen
 import com.example.proyectov2.ui.theme.AzulPetroleo
-import com.example.proyectov2.ui.viewmodel.LevantamientosViewModel
-import com.example.proyectov2.ui.viewmodel.SesionViewModel
+import com.example.proyectov2.viewmodel.LevantamientosViewModel
+import com.example.proyectov2.viewmodel.SesionViewModel
 
 @Composable
 fun NavegacionApp(

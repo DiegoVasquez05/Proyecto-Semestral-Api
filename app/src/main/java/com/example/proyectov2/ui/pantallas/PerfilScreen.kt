@@ -30,8 +30,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.proyectov2.data.Estados
-import com.example.proyectov2.data.Roles
+import com.example.proyectov2.model.Estados
+import com.example.proyectov2.model.Roles
 import com.example.proyectov2.ui.componentes.AvatarUsuario
 import com.example.proyectov2.ui.componentes.BotonPrincipal
 import com.example.proyectov2.ui.componentes.BotonSecundario
@@ -42,11 +42,10 @@ import com.example.proyectov2.ui.theme.FondoGris
 import com.example.proyectov2.ui.theme.RojoTexto
 import com.example.proyectov2.ui.theme.TextoPrincipal
 import com.example.proyectov2.ui.theme.TextoSecundario
-import com.example.proyectov2.ui.theme.VerdeAzulado
 import com.example.proyectov2.ui.theme.VerdeFondo
 import com.example.proyectov2.ui.theme.VerdeTexto
-import com.example.proyectov2.ui.viewmodel.LevantamientosViewModel
-import com.example.proyectov2.ui.viewmodel.SesionViewModel
+import com.example.proyectov2.viewmodel.LevantamientosViewModel
+import com.example.proyectov2.viewmodel.SesionViewModel
 
 @Composable
 fun PerfilScreen(

@@ -1,10 +1,9 @@
-package com.example.proyectov2.data.local
+package com.example.proyectov2.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.proyectov2.data.Estados
 
 /** Componente del catálogo registrado dentro de un levantamiento. El id es el de la API. */
 @Entity(

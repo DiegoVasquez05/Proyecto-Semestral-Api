@@ -1,18 +1,18 @@
-package com.example.proyectov2.data.repositorio
+package com.example.proyectov2.repository
 
 import androidx.room.withTransaction
-import com.example.proyectov2.data.local.Componente
-import com.example.proyectov2.data.local.Levantamiento
-import com.example.proyectov2.data.local.RackProDatabase
-import com.example.proyectov2.data.remoto.AprobacionRequest
-import com.example.proyectov2.data.remoto.EdicionLevantamientoRequest
-import com.example.proyectov2.data.remoto.EstadoComponenteRequest
-import com.example.proyectov2.data.remoto.LevantamientoDto
-import com.example.proyectov2.data.remoto.NuevoComponenteRequest
-import com.example.proyectov2.data.remoto.NuevoLevantamientoRequest
-import com.example.proyectov2.data.remoto.RackProApi
-import com.example.proyectov2.data.remoto.aEntidad
-import com.example.proyectov2.data.remoto.llamarApi
+import com.example.proyectov2.model.AprobacionRequest
+import com.example.proyectov2.model.Componente
+import com.example.proyectov2.model.EdicionLevantamientoRequest
+import com.example.proyectov2.model.EstadoComponenteRequest
+import com.example.proyectov2.model.Levantamiento
+import com.example.proyectov2.model.LevantamientoDto
+import com.example.proyectov2.model.NuevoComponenteRequest
+import com.example.proyectov2.model.NuevoLevantamientoRequest
+import com.example.proyectov2.repository.local.RackProDatabase
+import com.example.proyectov2.repository.remoto.RackProApi
+import com.example.proyectov2.repository.remoto.aEntidad
+import com.example.proyectov2.repository.remoto.llamarApi
 import kotlinx.coroutines.flow.Flow
 
 /**

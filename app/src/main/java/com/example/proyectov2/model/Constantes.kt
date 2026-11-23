@@ -1,4 +1,4 @@
-package com.example.proyectov2.data
+package com.example.proyectov2.model
 
 object Roles {
     const val INSPECTOR = "Inspector"

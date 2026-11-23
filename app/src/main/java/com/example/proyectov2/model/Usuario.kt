@@ -1,4 +1,4 @@
-package com.example.proyectov2.data.local
+package com.example.proyectov2.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
