@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.proyectov2.BuildConfig
 import com.example.proyectov2.R
 import com.example.proyectov2.ui.componentes.Encabezado
 import com.example.proyectov2.ui.componentes.Tarjeta
@@ -88,7 +89,7 @@ fun AcercaDeScreen() {
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Text(
-                    text = "Versión 1.0.0 · MVP",
+                    text = "Versión ${BuildConfig.VERSION_NAME}",
                     color = TextoSecundario,
                     fontSize = 13.sp,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -97,6 +98,8 @@ fun AcercaDeScreen() {
             DatoAcercaDe(titulo = "Proyecto", valor = "Académico DSY1105")
             DatoAcercaDe(titulo = "Caso", valor = "CMC360 SpA · Levantamiento de Data Centers")
             DatoAcercaDe(titulo = "Plataforma", valor = "Android")
+            DatoAcercaDe(titulo = "Datos", valor = "API REST propia (Node.js + PostgreSQL) con caché local en Room")
+            DatoAcercaDe(titulo = "Recursos nativos", valor = "Cámara, galería de fotos y notificaciones")
         }
     }
 }

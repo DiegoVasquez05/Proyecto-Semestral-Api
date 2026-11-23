@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.proyectov2.RackProViewModel
 import com.example.proyectov2.camara.CamaraFotos
 import com.example.proyectov2.ui.componentes.BotonPrincipal
 import com.example.proyectov2.ui.componentes.BotonSecundario
@@ -32,10 +31,11 @@ import com.example.proyectov2.ui.componentes.Encabezado
 import com.example.proyectov2.ui.componentes.TextoInformativo
 import com.example.proyectov2.ui.theme.FondoGris
 import com.example.proyectov2.ui.theme.RojoTexto
+import com.example.proyectov2.ui.viewmodel.SesionViewModel
 import com.example.proyectov2.utilidades.Validaciones
 
 @Composable
-fun EditarPerfilScreen(viewModel: RackProViewModel, onVolver: () -> Unit) {
+fun EditarPerfilScreen(viewModel: SesionViewModel, onVolver: () -> Unit) {
     val usuario = viewModel.usuarioActual ?: return
     val context = LocalContext.current
 
@@ -113,7 +113,8 @@ fun EditarPerfilScreen(viewModel: RackProViewModel, onVolver: () -> Unit) {
                 .padding(16.dp)
         ) {
             BotonPrincipal(
-                texto = "Guardar cambios",
+                texto = if (viewModel.procesando) "Guardando..." else "Guardar cambios",
+                habilitado = !viewModel.procesando,
                 onClick = {
                     errorNombre = Validaciones.validarNombre(nombreCompleto)
                     errorCorreo = Validaciones.validarCorreo(correo)

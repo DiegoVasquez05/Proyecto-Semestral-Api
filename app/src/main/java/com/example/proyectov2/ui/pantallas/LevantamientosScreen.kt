@@ -20,6 +20,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,9 +38,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.proyectov2.RackProViewModel
 import com.example.proyectov2.data.Estados
-import com.example.proyectov2.data.Levantamiento
+import com.example.proyectov2.data.local.Levantamiento
+import com.example.proyectov2.notificaciones.SolicitarPermisoNotificaciones
 import com.example.proyectov2.data.Roles
 import com.example.proyectov2.ui.componentes.BotonPrincipal
 import com.example.proyectov2.ui.componentes.CampoFormulario
@@ -52,17 +54,26 @@ import com.example.proyectov2.ui.theme.FondoGris
 import com.example.proyectov2.ui.theme.TextoPrincipal
 import com.example.proyectov2.ui.theme.TextoSecundario
 import com.example.proyectov2.ui.theme.VerdeAzulado
+import com.example.proyectov2.ui.viewmodel.LevantamientosViewModel
+import com.example.proyectov2.ui.viewmodel.SesionViewModel
 import com.example.proyectov2.utilidades.Fechas
 import com.example.proyectov2.utilidades.Validaciones
 
 private const val FILTRO_TODOS = "Todos"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LevantamientosScreen(viewModel: RackProViewModel, onAbrirDetalle: (Int) -> Unit) {
-    val usuario = viewModel.usuarioActual
+fun LevantamientosScreen(
+    sesionViewModel: SesionViewModel,
+    viewModel: LevantamientosViewModel,
+    onAbrirDetalle: (Int) -> Unit
+) {
+    val usuario = sesionViewModel.usuarioActual
     val levantamientos by viewModel.levantamientos.collectAsState()
     var filtroSeleccionado by rememberSaveable { mutableStateOf(FILTRO_TODOS) }
     var mostrarDialogoNuevaInspeccion by remember { mutableStateOf(false) }
+
+    SolicitarPermisoNotificaciones()
 
     val levantamientosFiltrados = if (filtroSeleccionado == FILTRO_TODOS) {
         levantamientos
@@ -90,25 +101,17 @@ fun LevantamientosScreen(viewModel: RackProViewModel, onAbrirDetalle: (Int) -> U
             }
         }
 
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+        // Deslizar hacia abajo vuelve a descargar los levantamientos desde la API.
+        PullToRefreshBox(
+            isRefreshing = viewModel.sincronizando,
+            onRefresh = { viewModel.sincronizar() },
             modifier = Modifier.weight(1f)
         ) {
-            if (levantamientosFiltrados.isEmpty()) {
-                item {
-                    Column(modifier = Modifier.padding(top = 40.dp)) {
-                        TextoInformativo(texto = "No hay levantamientos para mostrar")
-                    }
-                }
-            }
-            items(levantamientosFiltrados, key = { levantamiento -> levantamiento.id }) { levantamiento ->
-                TarjetaLevantamiento(
-                    levantamiento = levantamiento,
-                    onClick = { onAbrirDetalle(levantamiento.id) },
-                    modifier = Modifier.animateItem()
-                )
-            }
+            ListaLevantamientos(
+                levantamientos = levantamientosFiltrados,
+                sincronizando = viewModel.sincronizando,
+                onAbrirDetalle = onAbrirDetalle
+            )
         }
 
         if (usuario?.rol == Roles.INSPECTOR) {
@@ -128,11 +131,47 @@ fun LevantamientosScreen(viewModel: RackProViewModel, onAbrirDetalle: (Int) -> U
             onCancelar = { mostrarDialogoNuevaInspeccion = false },
             onCrear = { codigoRack, dataCenter, sala, fecha ->
                 mostrarDialogoNuevaInspeccion = false
-                viewModel.crearLevantamiento(codigoRack, dataCenter, sala, fecha) { idNuevo ->
-                    onAbrirDetalle(idNuevo)
+                if (usuario != null) {
+                    viewModel.crearLevantamiento(usuario, codigoRack, dataCenter, sala, fecha) { idNuevo ->
+                        onAbrirDetalle(idNuevo)
+                    }
                 }
             }
         )
+    }
+}
+
+@Composable
+private fun ListaLevantamientos(
+    levantamientos: List<Levantamiento>,
+    sincronizando: Boolean,
+    onAbrirDetalle: (Int) -> Unit
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if (levantamientos.isEmpty()) {
+            item {
+                Column(modifier = Modifier.padding(top = 40.dp)) {
+                    TextoInformativo(
+                        texto = if (sincronizando) {
+                            "Cargando levantamientos desde el servidor..."
+                        } else {
+                            "No hay levantamientos para mostrar. Desliza hacia abajo para actualizar."
+                        }
+                    )
+                }
+            }
+        }
+        items(levantamientos, key = { levantamiento -> levantamiento.id }) { levantamiento ->
+            TarjetaLevantamiento(
+                levantamiento = levantamiento,
+                onClick = { onAbrirDetalle(levantamiento.id) },
+                modifier = Modifier.animateItem()
+            )
+        }
     }
 }
 
