@@ -1,10 +1,12 @@
-package com.example.proyectov2.data
+package com.example.proyectov2.data.local
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.proyectov2.data.Estados
 
+/** Componente del catálogo registrado dentro de un levantamiento. El id es el de la API. */
 @Entity(
     tableName = "componentes",
     foreignKeys = [
@@ -18,7 +20,7 @@ import androidx.room.PrimaryKey
     indices = [Index(value = ["levantamientoId"])]
 )
 data class Componente(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey val id: Int,
     val levantamientoId: Int,
     val nombre: String,
     val estado: String = Estados.PENDIENTE

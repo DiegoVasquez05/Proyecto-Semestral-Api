@@ -10,17 +10,13 @@ object Estados {
     const val APROBADO = "Aprobado"
     const val VALIDADO = "Validado"
     const val OBSERVADO = "Observado"
-}
 
-object CatalogoComponentes {
-    val lista = listOf(
-        "UPS 20 kVA",
-        "Switch core 48p",
-        "PDU 32A",
-        "Servidor 2U",
-        "Patch panel 24p",
-        "Bandeja de fibra",
-        "Firewall 1U",
-        "KVM 8 puertos"
-    )
+    /** Estado al que pasa un componente cuando el supervisor lo toca: Pendiente → Validado → Observado → Pendiente. */
+    fun siguienteEstadoComponente(estadoActual: String): String {
+        return when (estadoActual) {
+            PENDIENTE -> VALIDADO
+            VALIDADO -> OBSERVADO
+            else -> PENDIENTE
+        }
+    }
 }
