@@ -1,4 +1,4 @@
-package com.example.proyectov2.ui.viewmodel
+package com.example.proyectov2.viewmodel
 
 import android.app.Application
 import android.net.Uri
@@ -8,11 +8,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.proyectov2.RackProApplication
-import com.example.proyectov2.data.Estados
-import com.example.proyectov2.data.local.Componente
-import com.example.proyectov2.data.local.Levantamiento
-import com.example.proyectov2.data.local.Usuario
-import com.example.proyectov2.data.remoto.NuevoLevantamientoRequest
+import com.example.proyectov2.model.Componente
+import com.example.proyectov2.model.Estados
+import com.example.proyectov2.model.Levantamiento
+import com.example.proyectov2.model.NuevoLevantamientoRequest
+import com.example.proyectov2.model.Usuario
 import com.example.proyectov2.notificaciones.Notificador
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted

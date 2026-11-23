@@ -23,12 +23,12 @@ Cuentas de prueba (se crean automáticamente en la API):
 
 | Requisito | Dónde se cumple |
 |---|---|
-| Consumo de API externa (mínimo 7 endpoints, GET y POST) | API propia en [`api/`](api) con 13 endpoints; la app consume 12 en [`RackProApi.kt`](app/src/main/java/com/example/proyectov2/data/remoto/RackProApi.kt) |
+| Consumo de API externa (mínimo 7 endpoints, GET y POST) | API propia en [`api/`](api) con 13 endpoints; la app consume 12 en [`RackProApi.kt`](app/src/main/java/com/example/proyectov2/repository/remoto/RackProApi.kt) |
 | Pruebas unitarias (mínimo 2) | 16 pruebas de la app en [`app/src/test`](app/src/test/java/com/example/proyectov2) y 12 pruebas de la API en [`api/test`](api/test) |
 | APK firmado (modo release) | Firma configurada en [`app/build.gradle.kts`](app/build.gradle.kts) y generada por [`release.yml`](.github/workflows/release.yml) |
 | Ícono personalizado | Ícono adaptativo en [`res/drawable/ic_launcher_foreground.xml`](app/src/main/res/drawable/ic_launcher_foreground.xml) |
 | 2 recursos nativos | **Cámara y galería** ([`camara/CamaraFotos.kt`](app/src/main/java/com/example/proyectov2/camara/CamaraFotos.kt)) y **notificaciones** ([`notificaciones/Notificador.kt`](app/src/main/java/com/example/proyectov2/notificaciones/Notificador.kt)) |
-| Arquitectura MVVM | Capas `data` (local, remoto, repositorio) → `ui/viewmodel` → `ui/pantallas` |
+| Arquitectura MVVM | Carpetas `model`, `repository` y `viewmodel`, más las pantallas en `ui` |
 
 ## Arquitectura
 
@@ -38,22 +38,25 @@ La app sigue el patrón **MVVM**. Cada capa tiene una sola responsabilidad y sol
 Pantallas (Jetpack Compose)        ui/pantallas, ui/componentes
         │  observan el estado y llaman acciones
         ▼
-ViewModels                         ui/viewmodel
+ViewModels                         viewmodel/
         │  SesionViewModel · LevantamientosViewModel
         ▼
-Repositorios                       data/repositorio
+Repositorios                       repository/
         │  UsuarioRepositorio · LevantamientoRepositorio
         ├──────────────────────────────┐
         ▼                              ▼
 API REST (Retrofit)                Room (caché local)
-data/remoto                        data/local
+repository/remoto                  repository/local
+
+Model (model/): entidades, DTO de la API, roles y estados que usan todas las capas
 ```
 
 - **Pantallas:** solo dibujan la interfaz y validan los formularios. No acceden a datos directamente.
 - **ViewModels:** guardan el estado de la pantalla (usuario actual, listado, mensajes, carga) y lanzan las operaciones en corrutinas.
 - **Repositorios:** deciden de dónde vienen los datos. Cada cambio se envía primero a la API y, si responde bien, la respuesta se guarda en Room; las pantallas observan Room con `Flow` y se actualizan solas.
-- **Remoto:** interfaz Retrofit, DTO, conversión a entidades y manejo de errores con mensajes en español.
-- **Local:** entidades y DAO de Room. Las fotos de evidencia y de perfil solo se guardan en el teléfono.
+- **Remoto (`repository/remoto`):** interfaz Retrofit, cliente HTTP, conversión de DTO a entidades y manejo de errores con mensajes en español.
+- **Local (`repository/local`):** DAO y base de datos Room. Las fotos de evidencia y de perfil solo se guardan en el teléfono.
+- **Model (`model`):** las clases de datos: entidades de Room, DTO que viajan en JSON, roles y estados.
 
 ### Estructura del proyecto
 
@@ -63,14 +66,13 @@ app/src/main/java/com/example/proyectov2/
 ├── RackProApplication.kt          Crea la base de datos, el cliente de la API y los repositorios
 ├── camara/CamaraFotos.kt          Recurso nativo 1: cámara y galería
 ├── notificaciones/Notificador.kt  Recurso nativo 2: notificaciones y permiso
-├── data/
-│   ├── Constantes.kt              Roles y estados
-│   ├── local/                     Entidades, DAO y base de datos Room
-│   ├── remoto/                    Retrofit: endpoints, DTO, mapeadores y errores
-│   └── repositorio/               Repositorios de usuarios y levantamientos
+├── model/                         Entidades (Usuario, Levantamiento, Componente), DTO, roles y estados
+├── repository/                    UsuarioRepositorio y LevantamientoRepositorio
+│   ├── local/                     DAO y base de datos Room
+│   └── remoto/                    Retrofit: endpoints, cliente, mapeadores y errores
+├── viewmodel/                     SesionViewModel y LevantamientosViewModel
 ├── navegacion/                    Rutas y NavHost
 ├── ui/
-│   ├── viewmodel/                 SesionViewModel y LevantamientosViewModel
 │   ├── pantallas/                 Una pantalla por archivo
 │   ├── componentes/               Botones, campos, encabezado, etiquetas
 │   └── theme/                     Paleta de colores y tema

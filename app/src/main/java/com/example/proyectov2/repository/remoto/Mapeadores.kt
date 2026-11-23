@@ -1,8 +1,11 @@
-package com.example.proyectov2.data.remoto
+package com.example.proyectov2.repository.remoto
 
-import com.example.proyectov2.data.local.Componente
-import com.example.proyectov2.data.local.Levantamiento
-import com.example.proyectov2.data.local.Usuario
+import com.example.proyectov2.model.Componente
+import com.example.proyectov2.model.ComponenteDto
+import com.example.proyectov2.model.Levantamiento
+import com.example.proyectov2.model.LevantamientoDto
+import com.example.proyectov2.model.Usuario
+import com.example.proyectov2.model.UsuarioDto
 
 // Conversión de los datos de la API a las entidades de Room.
 // Las fotos solo existen en el teléfono, por eso se reciben aparte para no perderlas.

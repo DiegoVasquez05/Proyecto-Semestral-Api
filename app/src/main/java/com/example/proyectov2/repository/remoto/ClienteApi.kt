@@ -1,11 +1,11 @@
-package com.example.proyectov2.data.remoto
+package com.example.proyectov2.repository.remoto
 
 import com.example.proyectov2.BuildConfig
+import java.util.concurrent.TimeUnit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 object ClienteApi {
 

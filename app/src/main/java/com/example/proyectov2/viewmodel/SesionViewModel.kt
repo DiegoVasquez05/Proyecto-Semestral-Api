@@ -1,4 +1,4 @@
-package com.example.proyectov2.ui.viewmodel
+package com.example.proyectov2.viewmodel
 
 import android.app.Application
 import androidx.compose.runtime.getValue
@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.proyectov2.RackProApplication
-import com.example.proyectov2.data.local.Usuario
+import com.example.proyectov2.model.Usuario
 import kotlinx.coroutines.launch
 
 /** Estado de la sesión: login, registro, edición del perfil y cierre de sesión. */

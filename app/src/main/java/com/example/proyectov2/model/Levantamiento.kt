@@ -1,8 +1,7 @@
-package com.example.proyectov2.data.local
+package com.example.proyectov2.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.proyectov2.data.Estados
 
 /**
  * Copia local de un levantamiento de la API. Room funciona como caché para mostrar los datos

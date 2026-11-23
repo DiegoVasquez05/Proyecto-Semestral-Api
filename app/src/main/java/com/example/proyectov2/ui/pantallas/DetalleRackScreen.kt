@@ -40,11 +40,11 @@ import androidx.compose.ui.unit.sp
 import com.example.proyectov2.camara.FotoGuardada
 import com.example.proyectov2.camara.rememberLanzadorCamara
 import com.example.proyectov2.camara.rememberLanzadorGaleria
-import com.example.proyectov2.data.Estados
-import com.example.proyectov2.data.Roles
-import com.example.proyectov2.data.local.Componente
-import com.example.proyectov2.data.local.Levantamiento
-import com.example.proyectov2.data.local.Usuario
+import com.example.proyectov2.model.Componente
+import com.example.proyectov2.model.Estados
+import com.example.proyectov2.model.Levantamiento
+import com.example.proyectov2.model.Roles
+import com.example.proyectov2.model.Usuario
 import com.example.proyectov2.ui.componentes.BotonPrincipal
 import com.example.proyectov2.ui.componentes.BotonSecundario
 import com.example.proyectov2.ui.componentes.CampoFormulario
@@ -60,10 +60,10 @@ import com.example.proyectov2.ui.theme.RojoTexto
 import com.example.proyectov2.ui.theme.TextoPrincipal
 import com.example.proyectov2.ui.theme.TextoSecundario
 import com.example.proyectov2.ui.theme.VerdeAzulado
-import com.example.proyectov2.ui.viewmodel.LevantamientosViewModel
-import com.example.proyectov2.ui.viewmodel.SesionViewModel
 import com.example.proyectov2.utilidades.Fechas
 import com.example.proyectov2.utilidades.Validaciones
+import com.example.proyectov2.viewmodel.LevantamientosViewModel
+import com.example.proyectov2.viewmodel.SesionViewModel
 
 @Composable
 fun DetalleRackScreen(

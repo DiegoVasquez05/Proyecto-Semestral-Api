@@ -21,10 +21,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,10 +38,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.proyectov2.data.Estados
-import com.example.proyectov2.data.local.Levantamiento
+import com.example.proyectov2.model.Estados
+import com.example.proyectov2.model.Levantamiento
+import com.example.proyectov2.model.Roles
 import com.example.proyectov2.notificaciones.SolicitarPermisoNotificaciones
-import com.example.proyectov2.data.Roles
 import com.example.proyectov2.ui.componentes.BotonPrincipal
 import com.example.proyectov2.ui.componentes.CampoFormulario
 import com.example.proyectov2.ui.componentes.Encabezado
@@ -54,10 +54,10 @@ import com.example.proyectov2.ui.theme.FondoGris
 import com.example.proyectov2.ui.theme.TextoPrincipal
 import com.example.proyectov2.ui.theme.TextoSecundario
 import com.example.proyectov2.ui.theme.VerdeAzulado
-import com.example.proyectov2.ui.viewmodel.LevantamientosViewModel
-import com.example.proyectov2.ui.viewmodel.SesionViewModel
 import com.example.proyectov2.utilidades.Fechas
 import com.example.proyectov2.utilidades.Validaciones
+import com.example.proyectov2.viewmodel.LevantamientosViewModel
+import com.example.proyectov2.viewmodel.SesionViewModel
 
 private const val FILTRO_TODOS = "Todos"
 

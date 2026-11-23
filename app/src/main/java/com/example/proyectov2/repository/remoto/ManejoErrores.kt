@@ -1,9 +1,10 @@
-package com.example.proyectov2.data.remoto
+package com.example.proyectov2.repository.remoto
 
+import com.example.proyectov2.model.ErrorDto
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import retrofit2.HttpException
 import java.io.IOException
+import retrofit2.HttpException
 
 const val MENSAJE_SIN_CONEXION = "No se pudo conectar con el servidor. Revisa tu conexión a internet."
 const val MENSAJE_ERROR_DESCONOCIDO = "Ocurrió un error inesperado. Inténtalo nuevamente."

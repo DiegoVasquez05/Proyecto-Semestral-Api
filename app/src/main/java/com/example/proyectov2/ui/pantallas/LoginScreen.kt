@@ -35,7 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyectov2.R
-import com.example.proyectov2.data.Roles
+import com.example.proyectov2.model.Roles
 import com.example.proyectov2.ui.componentes.BotonPrincipal
 import com.example.proyectov2.ui.componentes.BotonSecundario
 import com.example.proyectov2.ui.componentes.CampoFormulario
@@ -46,8 +46,8 @@ import com.example.proyectov2.ui.theme.Blanco
 import com.example.proyectov2.ui.theme.FondoGris
 import com.example.proyectov2.ui.theme.RojoTexto
 import com.example.proyectov2.ui.theme.TextoSecundario
-import com.example.proyectov2.ui.viewmodel.SesionViewModel
 import com.example.proyectov2.utilidades.Validaciones
+import com.example.proyectov2.viewmodel.SesionViewModel
 
 @Composable
 fun LoginScreen(

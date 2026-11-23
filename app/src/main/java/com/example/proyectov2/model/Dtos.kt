@@ -1,4 +1,4 @@
-package com.example.proyectov2.data.remoto
+package com.example.proyectov2.model
 
 // Objetos que viajan en formato JSON entre la app y la API (DTO = Data Transfer Object).
 

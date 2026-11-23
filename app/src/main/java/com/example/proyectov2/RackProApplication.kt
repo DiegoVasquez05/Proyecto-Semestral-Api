@@ -1,11 +1,11 @@
 package com.example.proyectov2
 
 import android.app.Application
-import com.example.proyectov2.data.local.RackProDatabase
-import com.example.proyectov2.data.remoto.ClienteApi
-import com.example.proyectov2.data.repositorio.LevantamientoRepositorio
-import com.example.proyectov2.data.repositorio.UsuarioRepositorio
 import com.example.proyectov2.notificaciones.Notificador
+import com.example.proyectov2.repository.LevantamientoRepositorio
+import com.example.proyectov2.repository.UsuarioRepositorio
+import com.example.proyectov2.repository.local.RackProDatabase
+import com.example.proyectov2.repository.remoto.ClienteApi
 
 /**
  * Crea una sola vez la base de datos, el cliente de la API y los repositorios,
