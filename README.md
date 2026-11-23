@@ -204,7 +204,7 @@ El APK release se firma con una llave que **no** está en el repositorio. `app/b
 | `RACKPRO_KEY_ALIAS` | Alias de la llave |
 | `RACKPRO_KEY_PASSWORD` | Contraseña del alias |
 
-Para publicar una versión nueva se sube una etiqueta; el workflow [`release.yml`](.github/workflows/release.yml) compila, firma, verifica la firma y publica el APK en Releases:
+Para publicar una versión nueva se ejecuta el workflow [`release.yml`](.github/workflows/release.yml) desde **Actions → APK firmado (release) → Run workflow** indicando la versión, o se sube una etiqueta. El workflow compila, firma, verifica la firma y publica el APK en Releases:
 
 ```bash
 git tag v2.0.0
